@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Header from './components/Header';
 import TypingTest from './components/TypingTest';
 import Results from './components/Results';
+import Footer from './components/Footer';
 
 const App = () => {
   const [results, setResults] = useState(null);
@@ -18,6 +19,7 @@ const App = () => {
           <Results results={results} resetTest={resetTest} />
         )}
       </main>
+      <Footer />
     </div>
   );
 };
