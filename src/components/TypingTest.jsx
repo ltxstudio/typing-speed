@@ -80,17 +80,34 @@ const TypingTest = ({ onComplete }) => {
     setIsPaused(false);
   };
 
-  // Highlight text by character and show spaces correctly
+  // Highlight text by word and show spaces correctly
   const getHighlightedText = () => {
-    return text.split('').map((char, idx) => {
-      const isCorrect = char === input[idx];  // Compare character by character
+    const words = text.split(' '); // Split the text by words, not characters
+    let currentIndex = 0; // To track the position of the user's input
+
+    return words.map((word, wordIndex) => {
+      // Get the user's input until the current word
+      const userInput = input.substring(currentIndex, currentIndex + word.length);
+
+      // Update the currentIndex for the next word
+      currentIndex += word.length + 1; // +1 for the space after each word
+
       return (
-        <span key={idx}>
-          <span
-            className={`inline-block ${isCorrect ? 'text-green-500' : 'text-red-500'}`}
-          >
-            {char}
-          </span>
+        <span key={wordIndex}>
+          {word.split('').map((char, charIndex) => {
+            // Highlight the character based on whether it matches the input
+            const isCorrect = userInput[charIndex] === char;
+            return (
+              <span
+                key={charIndex}
+                className={`inline-block ${isCorrect ? 'text-green-500' : 'text-red-500'}`}
+              >
+                {char}
+              </span>
+            );
+          })}
+          {/* Render space between words */}
+          {wordIndex < words.length - 1 && <span>&nbsp;</span>}
         </span>
       );
     });
