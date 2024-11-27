@@ -9,12 +9,15 @@ const TypingTest = ({ onComplete }) => {
   const [finished, setFinished] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [realTimeSpeed, setRealTimeSpeed] = useState(0);
+  const [typedWords, setTypedWords] = useState(0);
 
+  // Set random sample text on component mount
   useEffect(() => {
     const randomText = sampleTexts[Math.floor(Math.random() * sampleTexts.length)];
     setText(randomText);
   }, []);
 
+  // Update elapsed time and real-time speed
   useEffect(() => {
     let interval;
     if (!finished && startTime) {
@@ -31,16 +34,19 @@ const TypingTest = ({ onComplete }) => {
     if (!startTime) setStartTime(Date.now());
     setInput(value);
 
-    const errors = value
-      .split('')
-      .filter((char, idx) => char !== text[idx]).length;
+    // Calculate error count
+    const errors = value.split('').filter((char, idx) => char !== text[idx]).length;
     setErrorCount(errors);
 
-    const words = value.trim().split(' ').length;
+    // Calculate real-time typing speed (WPM)
+    const wordsTyped = value.trim().split(' ').length;
+    setTypedWords(wordsTyped);
+
     const timeTaken = (Date.now() - startTime) / 1000;
-    const speed = Math.round((words / timeTaken) * 60);
+    const speed = Math.round((wordsTyped / timeTaken) * 60);
     setRealTimeSpeed(speed);
 
+    // Check if typing test is complete
     if (value === text) {
       setFinished(true);
       const totalTimeTaken = (Date.now() - startTime) / 1000;
@@ -58,13 +64,33 @@ const TypingTest = ({ onComplete }) => {
     setStartTime(null);
     setFinished(false);
     setRealTimeSpeed(0);
+    setTypedWords(0);
+  };
+
+  const getHighlightedText = () => {
+    const splitText = text.split('');
+    const splitInput = input.split('');
+    return splitText.map((char, idx) => {
+      const isCorrect = char === splitInput[idx];
+      return (
+        <span
+          key={idx}
+          className={`inline-block ${isCorrect ? 'text-green-500' : 'text-red-500'}`}
+        >
+          {char}
+        </span>
+      );
+    });
   };
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg max-w-2xl mx-auto">
-      <p className="text-lg font-medium mb-4 text-gray-700 border-b pb-2">{text}</p>
-      
-      {/* Input Textarea */}
+      {/* Display the typed text with highlighting */}
+      <p className="text-lg font-medium mb-4 text-gray-700 border-b pb-2">
+        {getHighlightedText()}
+      </p>
+
+      {/* Textarea Input */}
       <textarea
         disabled={finished}
         value={input}
@@ -72,19 +98,20 @@ const TypingTest = ({ onComplete }) => {
         className="w-full h-28 border border-gray-300 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
         placeholder="Start typing here..."
       ></textarea>
-      
-      {/* Speed and Error Display */}
+
+      {/* Speed, Errors, Time and Words Display */}
       <div className="flex justify-between mt-4 text-sm text-gray-600">
         <div className="flex items-center space-x-4">
           <p>Errors: {errorCount}</p>
           <p>WPM: {realTimeSpeed}</p>
+          <p>Words Typed: {typedWords}</p>
         </div>
         <div>
           <p>Time: {elapsedTime}s</p>
         </div>
       </div>
 
-      {/* Test Completed Message */}
+      {/* Test Completion Message */}
       {finished && (
         <div className="mt-4 text-center">
           <p className="text-sm text-green-500 font-semibold">Test Completed!</p>
