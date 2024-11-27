@@ -37,11 +37,8 @@ const TypingTest = ({ onComplete }) => {
     if (!startTime) setStartTime(Date.now());
     setInput(value);
 
-    // Calculate error count (count mismatched characters)
-    let errors = 0;
-    for (let i = 0; i < value.length; i++) {
-      if (value[i] !== text[i]) errors++;
-    }
+    // Calculate error count
+    const errors = value.split('').filter((char, idx) => char !== text[idx]).length;
     setErrorCount(errors);
 
     // Calculate real-time typing speed (WPM)
@@ -73,17 +70,22 @@ const TypingTest = ({ onComplete }) => {
     setTypedWords(0);
   };
 
+  // Highlight text by word and show spaces correctly
   const getHighlightedText = () => {
-    const splitText = text.split('');
-    const splitInput = input.split('');
-    return splitText.map((char, idx) => {
-      const isCorrect = char === splitInput[idx];
+    const splitText = text.split(' ');  // Split by words
+    const splitInput = input.split(' ');  // Split the input by words
+
+    return splitText.map((word, idx) => {
+      const isCorrect = word === splitInput[idx];  // Compare word by word
       return (
-        <span
-          key={idx}
-          className={`inline-block ${isCorrect ? 'text-green-500' : 'text-red-500'}`}
-        >
-          {char}
+        <span key={idx}>
+          <span
+            className={`inline-block ${isCorrect ? 'text-green-500' : 'text-red-500'}`}
+          >
+            {word}
+          </span>
+          {/* Add a space after each word to preserve spacing */}
+          {idx < splitText.length - 1 && ' '}
         </span>
       );
     });
@@ -112,7 +114,7 @@ const TypingTest = ({ onComplete }) => {
         placeholder="Start typing here..."
       ></textarea>
 
-      {/* Speed, Errors, Time, and Words Display */}
+      {/* Speed, Errors, Time and Words Display */}
       <div className="flex justify-between mt-4 text-sm text-gray-600">
         <div className="flex items-center space-x-4">
           <p>Errors: {errorCount}</p>
