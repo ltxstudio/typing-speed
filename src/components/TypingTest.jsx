@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { sampleTexts } from '../data/sampleText';
-import { FaInfoCircle, FaListAlt, FaPlayCircle, FaQuestionCircle } from 'react-icons/fa';
+import { FaInfoCircle, FaListAlt, FaPlayCircle, FaQuestionCircle, FaPauseCircle } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 
 const TypingTest = ({ onComplete }) => {
@@ -13,6 +13,9 @@ const TypingTest = ({ onComplete }) => {
   const [realTimeSpeed, setRealTimeSpeed] = useState(0);
   const [typedWords, setTypedWords] = useState(0);
   const [showInfo, setShowInfo] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [highScore, setHighScore] = useState(localStorage.getItem('highScore') || 0);
+  const [difficulty, setDifficulty] = useState('medium');
 
   // Set random sample text on component mount
   useEffect(() => {
@@ -23,13 +26,13 @@ const TypingTest = ({ onComplete }) => {
   // Update elapsed time and real-time speed
   useEffect(() => {
     let interval;
-    if (!finished && startTime) {
+    if (!finished && startTime && !isPaused) {
       interval = setInterval(() => {
         setElapsedTime(Math.floor((Date.now() - startTime) / 1000));
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [startTime, finished]);
+  }, [startTime, finished, isPaused]);
 
   const handleInputChange = (e) => {
     const { value } = e.target;
@@ -56,6 +59,12 @@ const TypingTest = ({ onComplete }) => {
       const totalWords = text.split(' ').length;
       const finalSpeed = Math.round((totalWords / totalTimeTaken) * 60);
       onComplete({ speed: finalSpeed, timeTaken: totalTimeTaken, errors });
+
+      // Update high score if needed
+      if (finalSpeed > highScore) {
+        setHighScore(finalSpeed);
+        localStorage.setItem('highScore', finalSpeed);
+      }
     }
   };
 
@@ -68,30 +77,30 @@ const TypingTest = ({ onComplete }) => {
     setFinished(false);
     setRealTimeSpeed(0);
     setTypedWords(0);
+    setIsPaused(false);
   };
 
-  // Highlight text by word and show spaces correctly
+  // Highlight text by character and show spaces correctly
   const getHighlightedText = () => {
-    const splitText = text.split(' ');  // Split by words
-    const splitInput = input.split(' ');  // Split the input by words
-
-    return splitText.map((word, idx) => {
-      const isCorrect = word === splitInput[idx];  // Compare word by word
+    return text.split('').map((char, idx) => {
+      const isCorrect = char === input[idx];  // Compare character by character
       return (
         <span key={idx}>
           <span
             className={`inline-block ${isCorrect ? 'text-green-500' : 'text-red-500'}`}
           >
-            {word}
+            {char}
           </span>
-          {/* Add a space after each word to preserve spacing */}
-          {idx < splitText.length - 1 && ' '}
         </span>
       );
     });
   };
 
   const toggleInfo = () => setShowInfo(!showInfo);
+
+  const togglePause = () => {
+    setIsPaused(!isPaused);
+  };
 
   return (
     <motion.div
@@ -107,7 +116,7 @@ const TypingTest = ({ onComplete }) => {
 
       {/* Textarea Input */}
       <textarea
-        disabled={finished}
+        disabled={finished || isPaused}
         value={input}
         onChange={handleInputChange}
         className="w-full h-28 border border-gray-300 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
@@ -122,8 +131,13 @@ const TypingTest = ({ onComplete }) => {
           <p>Words Typed: {typedWords}</p>
         </div>
         <div>
-          <p>Time: {elapsedTime}s</p>
+          <p>Time: {Math.floor(elapsedTime / 60)}:{elapsedTime % 60}s</p>
         </div>
+      </div>
+
+      {/* High Score Display */}
+      <div className="mt-4 text-sm text-gray-600">
+        <p>High Score: {highScore} WPM</p>
       </div>
 
       {/* Test Completion Message */}
@@ -142,6 +156,18 @@ const TypingTest = ({ onComplete }) => {
             Restart Test
           </button>
         </motion.div>
+      )}
+
+      {/* Pause/Resume Button */}
+      {!finished && (
+        <div className="mt-4 text-center">
+          <button
+            onClick={togglePause}
+            className="px-6 py-2 bg-yellow-600 text-white rounded-full hover:bg-yellow-700 transition-all duration-200"
+          >
+            {isPaused ? 'Resume' : 'Pause'}
+          </button>
+        </div>
       )}
 
       {/* About, Features, and How to Use Section */}
