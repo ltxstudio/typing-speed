@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { sampleTexts } from '../data/sampleText';
+import { FaInfoCircle, FaListAlt, FaPlayCircle, FaQuestionCircle } from 'react-icons/fa';
+import { motion } from 'framer-motion';
 
 const TypingTest = ({ onComplete }) => {
   const [text, setText] = useState('');
@@ -84,8 +86,35 @@ const TypingTest = ({ onComplete }) => {
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-lg max-w-2xl mx-auto">
-      {/* Display the typed text with highlighting */}
+    <motion.div
+      className="p-6 bg-white rounded-lg shadow-lg max-w-2xl mx-auto"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      {/* About, Features, and How to Use Section */}
+      <div className="mb-6">
+        <h2 className="text-2xl font-semibold text-blue-600 mb-4">About the Typing Test</h2>
+        <p className="text-gray-600 mb-4">
+          This is a simple and fun typing test application where you can measure your typing speed and accuracy.
+        </p>
+
+        <h3 className="text-xl font-semibold text-blue-500 mb-3">Features</h3>
+        <ul className="list-disc list-inside text-gray-600">
+          <li>Measure typing speed in words per minute (WPM)</li>
+          <li>Track typing accuracy (errors)</li>
+          <li>Real-time speed calculation</li>
+          <li>Interactive feedback with color coding (green for correct, red for errors)</li>
+        </ul>
+
+        <h3 className="text-xl font-semibold text-blue-500 mb-3 mt-4">How to Use</h3>
+        <p className="text-gray-600">
+          Simply start typing the text that appears on the screen. The application will track your speed and errors.
+          Once you finish, your results will be shown.
+        </p>
+      </div>
+
+      {/* Typing Test Section */}
       <p className="text-lg font-medium mb-4 text-gray-700 border-b pb-2">
         {getHighlightedText()}
       </p>
@@ -113,7 +142,12 @@ const TypingTest = ({ onComplete }) => {
 
       {/* Test Completion Message */}
       {finished && (
-        <div className="mt-4 text-center">
+        <motion.div
+          className="mt-4 text-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        >
           <p className="text-sm text-green-500 font-semibold">Test Completed!</p>
           <button
             onClick={restartTest}
@@ -121,9 +155,9 @@ const TypingTest = ({ onComplete }) => {
           >
             Restart Test
           </button>
-        </div>
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 };
 
