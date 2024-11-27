@@ -45,7 +45,11 @@ const Results = ({ results, resetTest }) => (
 
       {/* Copy Results Button */}
       <button
-        onClick={() => navigator.clipboard.writeText(`Typing Speed: ${results.speed} WPM, Time Taken: ${results.timeTaken} seconds, Errors: ${results.errors}`)}
+        onClick={() => {
+          const resultText = `Typing Speed: ${results.speed} WPM, Time Taken: ${results.timeTaken} seconds, Errors: ${results.errors}`;
+          navigator.clipboard.writeText(resultText);
+          alert("Results copied to clipboard!");
+        }}
         className="flex items-center bg-yellow-600 text-white px-6 py-3 rounded-lg hover:bg-yellow-700 transition duration-300 transform hover:scale-105"
       >
         <FaClipboard className="inline-block mr-2" />
