@@ -2,6 +2,8 @@
 
 A fun and interactive typing test to measure your typing speed and accuracy. Track your progress, challenge yourself to improve your typing skills, and compare your performance with others. This project is built with React and Vite, with features like real-time typing speed calculation, error tracking, and more.
 
+## Demo https://typing-speed-test-new.web.app/
+
 ## Features
 
 - **Typing Speed**: Measure your typing speed in words per minute (WPM).
