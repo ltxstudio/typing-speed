@@ -1,45 +1,47 @@
 import React from 'react';
-import { FaGithub, FaTwitter, FaLinkedin } from 'react-icons/fa';
+import { FaGithub, FaTelegram } from 'react-icons/fa';
 
 const Footer = () => (
-  <footer className="bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-600 text-white py-8 mt-12 relative">
-    {/* Footer content */}
-    <div className="container mx-auto flex flex-col items-center">
-      <p className="text-sm text-center mb-6 font-light opacity-80">
-        © 2024 Typing Speed Test. All rights reserved.
-      </p>
+  <footer className="bg-gradient-to-r from-blue-700 via-indigo-600 to-blue-700 text-white py-8 relative">
+    {/* Footer Content */}
+    <div className="container mx-auto flex flex-col items-center text-center">
+      {/* Decorative Title */}
+      <h2 className="text-xl md:text-2xl font-extrabold tracking-wide mb-4">
+        Connect with Us
+      </h2>
 
       {/* Social Icons */}
-      <div className="flex space-x-6 justify-center mb-4">
+      <div className="flex space-x-6 justify-center mb-6">
         <a
           href="https://github.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:text-gray-300 hover:scale-110 transition duration-200 transform"
+          className="group"
+          title="Visit GitHub"
         >
-          <FaGithub className="text-2xl sm:text-3xl" />
+          <FaGithub className="text-3xl md:text-4xl transition-transform duration-300 transform group-hover:scale-110 group-hover:text-gray-200" />
+          <span className="sr-only">GitHub</span>
         </a>
         <a
-          href="https://twitter.com"
+          href="https://telegram.org"
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:text-gray-300 hover:scale-110 transition duration-200 transform"
+          className="group"
+          title="Join Telegram"
         >
-          <FaTwitter className="text-2xl sm:text-3xl" />
-        </a>
-        <a
-          href="https://linkedin.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:text-gray-300 hover:scale-110 transition duration-200 transform"
-        >
-          <FaLinkedin className="text-2xl sm:text-3xl" />
+          <FaTelegram className="text-3xl md:text-4xl transition-transform duration-300 transform group-hover:scale-110 group-hover:text-gray-200" />
+          <span className="sr-only">Telegram</span>
         </a>
       </div>
 
-      {/* Footer Decoration */}
-      <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-blue-700 via-indigo-500 to-blue-700 opacity-30"></div>
+      {/* Footer Text */}
+      <p className="text-sm md:text-base font-light opacity-75">
+        © 2024 Typing Speed Test. All rights reserved.
+      </p>
     </div>
+
+    {/* Decorative Curved Divider */}
+    <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-blue-800 via-blue-600 to-transparent clip-path-wave"></div>
   </footer>
 );
 
