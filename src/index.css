@@ -5,3 +5,6 @@
 .clip-path-mountain {
   clip-path: polygon(0% 100%, 50% 80%, 100% 100%);
 }
+.clip-path-wave {
+  clip-path: polygon(0% 100%, 50% 85%, 100% 100%);
+}
