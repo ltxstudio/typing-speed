@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { sampleTexts } from "../data/sampleText";
-import { FaInfoCircle, FaPlayCircle, FaPauseCircle } from "react-icons/fa";
+import { FaInfoCircle, FaPlayCircle, FaPauseCircle, FaRedo } from "react-icons/fa";
 import { motion } from "framer-motion";
 import Confetti from "react-confetti";
 
@@ -84,37 +84,41 @@ const TypingTest = ({ onComplete }) => {
 
   return (
     <motion.div
-      className="p-6 bg-gradient-to-b from-blue-100 via-white to-gray-50 rounded-lg shadow-lg max-w-3xl mx-auto"
+      className="p-8 bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500 text-white rounded-lg shadow-2xl max-w-4xl mx-auto"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
       {finished && <Confetti />}
-      <h2 className="text-3xl font-extrabold text-center text-blue-600 mb-6">
-        Typing Test
+      <h2 className="text-4xl font-extrabold text-center mb-6">
+        Typing Speed Test
       </h2>
 
-      <div className="relative mb-4">
-        <div className="text-gray-700 mb-2 font-medium">
+      <div className="relative mb-6">
+        <div className="text-lg font-mono bg-white text-gray-800 p-4 rounded-md shadow-inner">
           {text.split("").map((char, index) => (
             <span
               key={index}
               className={`${
-                input[index] === char ? "text-green-500" : input[index] ? "text-red-500" : ""
+                input[index] === char
+                  ? "text-green-600"
+                  : input[index]
+                  ? "text-red-500"
+                  : ""
               }`}
             >
               {char}
             </span>
           ))}
         </div>
-        <div className="w-full bg-gray-300 h-2 rounded-full">
+        <div className="w-full bg-gray-300 h-2 rounded-full mt-4">
           <div
-            className="h-2 bg-blue-500 rounded-full transition-all"
+            className="h-2 bg-green-400 rounded-full transition-all"
             style={{ width: `${completionPercentage}%` }}
           ></div>
         </div>
-        <p className="text-right text-xs text-gray-500 mt-1">
-          Progress: {completionPercentage}%
+        <p className="text-right text-sm mt-2">
+          Progress: <span className="font-semibold">{completionPercentage}%</span>
         </p>
       </div>
 
@@ -122,55 +126,78 @@ const TypingTest = ({ onComplete }) => {
         disabled={finished || isPaused}
         value={input}
         onChange={handleInputChange}
-        className="w-full h-28 border border-gray-300 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-gray-700"
+        className="w-full h-32 bg-white text-gray-800 border-2 border-indigo-300 rounded-lg p-4 focus:ring-2 focus:ring-purple-400 shadow-sm"
         placeholder="Start typing here..."
       ></textarea>
 
       <div className="flex justify-between mt-4 text-sm">
-        <p>Errors: <span className="text-red-500">{errorCount}</span></p>
-        <p>WPM: <span className="text-green-500">{realTimeSpeed}</span></p>
-        <p>Words Typed: {typedWords}</p>
         <p>
-          Time: {Math.floor(elapsedTime / 60)}:{elapsedTime % 60}s
+          <span className="font-semibold">Errors:</span>{" "}
+          <span className="text-red-400">{errorCount}</span>
+        </p>
+        <p>
+          <span className="font-semibold">WPM:</span>{" "}
+          <span className="text-green-300">{realTimeSpeed}</span>
+        </p>
+        <p>
+          <span className="font-semibold">Words Typed:</span> {typedWords}
+        </p>
+        <p>
+          <span className="font-semibold">Time:</span> {Math.floor(elapsedTime / 60)}:
+          {elapsedTime % 60}s
         </p>
       </div>
 
-      <div className="mt-4 text-center">
+      <div className="mt-6 flex justify-center space-x-4">
         {finished ? (
           <button
             onClick={restartTest}
-            className="px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all"
+            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-full shadow-md"
           >
+            <FaRedo className="inline mr-2" />
             Restart Test
           </button>
         ) : (
           <button
             onClick={togglePause}
-            className="px-6 py-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600 transition-all"
+            className="px-6 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-full shadow-md"
           >
-            {isPaused ? "Resume" : "Pause"}
+            {isPaused ? (
+              <>
+                <FaPlayCircle className="inline mr-2" />
+                Resume
+              </>
+            ) : (
+              <>
+                <FaPauseCircle className="inline mr-2" />
+                Pause
+              </>
+            )}
           </button>
         )}
       </div>
 
       <button
         onClick={toggleInfo}
-        className="mt-4 px-4 py-2 bg-gray-700 text-white rounded-full"
+        className="mt-4 px-4 py-2 bg-gray-700 hover:bg-gray-800 rounded-full shadow-lg text-white"
       >
+        <FaInfoCircle className="inline mr-2" />
         {showInfo ? "Hide Info" : "Show Info"}
       </button>
 
       {showInfo && (
         <motion.div
-          className="mt-4 bg-gray-100 p-4 rounded-lg shadow"
+          className="mt-4 bg-white text-gray-800 p-6 rounded-lg shadow-md"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <h3 className="text-lg font-bold mb-2 text-blue-600">How to Use</h3>
-          <p className="text-gray-700">
-            Type the text as it appears above. Your speed and accuracy are
-            tracked in real time.
+          <h3 className="text-xl font-semibold text-purple-500 mb-3">
+            How to Use
+          </h3>
+          <p className="leading-relaxed">
+            Type the text as it appears above. Your speed and accuracy are tracked
+            in real time. Complete the test to see your results.
           </p>
         </motion.div>
       )}
